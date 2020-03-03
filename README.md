@@ -60,12 +60,6 @@ The results are extracted from the solution and saved in the matlab scruture R. 
 
 Once you installed casadi, you should be able to run the script MainScript.m. You will see that we used opti-stack to formulate the optimal control problem. Opti is an compact syntax to define NLP's (Non-linear programs). You can find more information here: https://web.casadi.org/blog/opti/. You'll see that this is very user friendly.
 
-## Excersize
-
-- Decrease the default functional base of support with 50% and with 80%. Discuss how the predicted motion changes and compare this to the results of [1].
-- How does the height of the subject influence the optimal postural response ?
-
-
 
 ## References
 
