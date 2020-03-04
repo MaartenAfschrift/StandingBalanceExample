@@ -29,7 +29,7 @@ Note that the relative mass distribution and relative location of the COM in the
 
 We use casadi to formulate the optimal control problem. You can download casadi here (https://web.casadi.org/get/) and simply install it by adding the casadi folder to your matlab path.
 
-We used a similar approach as in [1] to predict postural responses to platform translations. In short, we optimize the feedback gains of a full-state feedback controller to minimize a weighted sum of (1) deviations of COM position and (2) joint torques. 
+We used a similar approach as in [1] to predict postural responses to platform translations. In short, we optimize the feedback gains of a full-state feedback controller to minimize a weighted sum of (1) COM displacement (f_COMx.m) and (2) joint torques (f_Tid.m). 
 
 $$ J(K) = w_1 COM^2 + w_2 T^2 + w_3 (K-K_{LQR})^2 $$
 
@@ -39,13 +39,15 @@ We used a direct collocation approach with an euler integration scheme to formul
 
 ## General description of the optimal control problem
 
-minimize: $J(K)$ 
+minimize: $J(K,x,\dot{x})$ 
+
+with respect to K, x, \dot{x} where x = [q1 q2 qd1 qd2] is the state vector
 
 subject to:
 
-- dynamics - backward euler integration: $x(t+dt)-x(t) = \dot{x}*dt$
+- backward euler integration: $x_{i+1}-x_i = \dot{x}_i * dt$ 
 
-- feedback control: $T(t) = K x(t)$, with $T$ the inverse dynamic joint moment
+- feedback control: $T = K x, with $T (x, \dot{x})$ the inverse dynamic joint moments (computed using f_Tid.m)
 
 - COP in BOS: We added a constraint that the COP should remain within the functional base of support of the subject. This is needed to prevent the COP exceeding the dimensions of the foot (i.e. base of support), which is possible because we welded the feet to the ground in this simple model.
 
