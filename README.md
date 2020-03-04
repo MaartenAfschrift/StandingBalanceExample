@@ -1,12 +1,12 @@
 # Simulation standing balance
 
-This repository contains matlab scripts and function to:
+This repository contains matlab scripts and functions to:
 - Derive the equations of motion of a double inverted pendulum model (Folder EoM)
 - Optimize the gains of a full-state feedback controller to compensate for a support surface translation with minimal COM motion and joint moments.
 
 ## Description of the double inverted pendulum model
 
-The model consists of two degrees of freedom representing the ankle ($q_1$) and hip ($q_2$) joint. The ankle angle is the angle between the leg and the vertical line, the hip angle is the relatie angle between the leg and the trunk segment.  Each degree of freedom is actuated by an ideal torque actuator (T). 
+The model consists of two degrees of freedom representing the ankle ($q_1$) and hip ($q_2$) joint. The ankle angle is the angle between the leg and the vertical line, the hip angle is the relative angle between the leg and the trunk segment (0 corresponds to the leg and trunk being aligned).  Each degree of freedom is actuated by an ideal torque actuator (T). 
 
 We derived the equations of motion in the script DoublePendulum_EOM_Largrange. We used this scrip to create the following functions:
 - f_COMx : computes horizontal position of the whole body center of mass (CoM)
@@ -14,7 +14,7 @@ We derived the equations of motion in the script DoublePendulum_EOM_Largrange. W
 - f_Fy: computes the vertical ground reaction force (Fy)
 - f_Tid: computes the inverse dynamic joint moments
 
-These functions require (some) of the following in put arguments
+These functions require (some) of the following input arguments
 - q1 and q2: ankle and hip joint angle (in radians)
 - qd1 and qd2: ankle and hip angular velocity (in radians)
 - qdd1 and qdd2: ankle and hip angular acceleration (in radians)
@@ -22,14 +22,14 @@ These functions require (some) of the following in put arguments
 - l: length of the double pendulum (i.e. length subject) (in m)
 - ap: acceleration of the motion base (in m/s2)
 
-Note The relative mass distribution and relative location of the COM in the segments is constant. Therfore, you only have to specify the total mass and total length. You can find more information on how to use these functions in the scrip Info.m
+Note that the relative mass distribution and relative location of the COM in the segments is constant. Therfore, you only have to specify the total mass and total length. You can find more information on how to use these functions in the script Info.m
 
 
 ## Optimal feedback control
 
 We use casadi to formulate the optimal control problem. You can download casadi here (https://web.casadi.org/get/) and simply install it by adding the casadi folder to your matlab path.
 
-We used a similar approach as in [1] to predict postural responses to platform translations. In short, we optimize the feedback gains of a full-state feedback controller to minimize (1) deviations of COM position and (2) joint torques. 
+We used a similar approach as in [1] to predict postural responses to platform translations. In short, we optimize the feedback gains of a full-state feedback controller to minimize a weighted sum of (1) deviations of COM position and (2) joint torques. 
 
 $$ J(K) = w_1 COM^2 + w_2 T^2 + w_3 (K-K_{LQR})^2 $$
 
@@ -39,11 +39,11 @@ We used a direct collocation approach with an euler integration scheme to formul
 
 ## General description of the optimal control problem
 
-optimize: $J(K)$ 
+minimize: $J(K)$ 
 
 subject to:
 
-- backward euler integration: $x(t+dt)-x(t) = \dot{x}*dt$
+- dynamics - backward euler integration: $x(t+dt)-x(t) = \dot{x}*dt$
 
 - feedback control: $T(t) = K x(t)$, with $T$ the inverse dynamic joint moment
 
@@ -58,7 +58,7 @@ The results are extracted from the solution and saved in the matlab scruture R. 
 
 ### Notes on problem formulation
 
-Once you installed casadi, you should be able to run the script MainScript.m. You will see that we used opti-stack to formulate the optimal control problem. Opti is an compact syntax to define NLP's (Non-linear programs). You can find more information here: https://web.casadi.org/blog/opti/. You'll see that this is very user friendly.
+Once you installed casadi, you should be able to run the script MainScript.m. You will see that we used opti-stack to formulate the optimal control problem. Opti is a compact syntax to define NLP's (non-linear programs). You can find more information here: https://web.casadi.org/blog/opti/. You'll see that this is very user friendly.
 
 
 ## References
